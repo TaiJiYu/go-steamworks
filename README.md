@@ -6,7 +6,7 @@ A Steamworks SDK binding for Go
 
 ## Steamworks SDK version
 
-159
+161
 
 ## How to use
 
@@ -58,13 +58,13 @@ func Leaderboards(){
 		fmt.Println("read leaderbord timeout,spend time:", readSpend)
 	}
 	// read leadboard info
-	SteamUserStats().ReadLeadboard("Flowers", ELeaderboardDataRequestGlobal, 0, 10, successFunc, timeoutFunc, 0)
+	SteamUserStats().ReadLeadboard("your leadboard name", ELeaderboardDataRequestGlobal, 0, 10, successFunc, timeoutFunc, 0)
 
 	uploadRetFunc := func(ret LeaderboardScoreUploaded_t) {
 		fmt.Printf("%+v\n", ret)
 	}
 	// upload leadboard
-	SteamUserStats().UploadLeaderboardScore("Flowers", ELeaderboardUploadScoreMethod_KeepBest, uploadRetFunc, timeoutFunc, 50)
+	SteamUserStats().UploadLeaderboardScore("your leadboard name", ELeaderboardUploadScoreMethod_KeepBest, uploadRetFunc, timeoutFunc, 50)
 }
 ```
 
