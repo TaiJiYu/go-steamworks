@@ -182,7 +182,7 @@ func (s steamFriends) SetRichPresence(key, value string) bool {
 	return byte(v) != 0
 }
 func (s steamFriends) ActivateGameOverlayToStore(appID uint32) {
-	theDLL.call(flatAPI_ISteamFriends_ActivateGameOverlayToStore, uintptr(s), uintptr(EOverlayToStoreFlag_None))
+	theDLL.call(flatAPI_ISteamFriends_ActivateGameOverlayToStore, uintptr(s), uintptr(appID), uintptr(EOverlayToStoreFlag_None))
 }
 
 func SteamInput() ISteamInput {
