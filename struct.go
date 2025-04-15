@@ -147,8 +147,9 @@ func (l UserStatsReceived_t) FromByte(b []byte) UserStatsReceived_t {
 
 func (l UserStatsReceived_t) FromCStruct(cstruct C.UserStatsReceived_t) UserStatsReceived_t {
 	return UserStatsReceived_t{
-		SteamLeaderboard: SteamLeaderboard_t(cstruct.m_hSteamLeaderboard),
-		LeaderboardFound: cstruct.m_bLeaderboardFound != 0,
+		GameID:  int(cstruct.m_nGameID),
+		Result:  EResult(cstruct.m_eResult),
+		SteamID: CSteamID(cstruct.m_steamIDUser),
 	}
 }
 
