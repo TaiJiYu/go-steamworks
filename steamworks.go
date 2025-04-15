@@ -183,7 +183,7 @@ const (
 	flatAPI_SteamUserStats                          = "SteamAPI_SteamUserStats_v013"
 	flatAPI_ISteamUserStats_GetStatInt              = "SteamAPI_ISteamUserStats_GetStatInt32"
 	flatAPI_ISteamUserStats_SetStatInt              = "SteamAPI_ISteamUserStats_SetStatInt32"
-	flatAPI_ISteamUserStats_RequestCurrentStats     = "SteamAPI_ISteamUserStats_RequestCurrentStats"
+	flatAPI_ISteamUserStats_RequestCurrentStats     = "SteamAPI_ISteamUserStats_RequestUserStats"
 	flatAPI_ISteamUserStats_GetAchievement          = "SteamAPI_ISteamUserStats_GetAchievement"
 	flatAPI_ISteamUserStats_SetAchievement          = "SteamAPI_ISteamUserStats_SetAchievement"
 	flatAPI_ISteamUserStats_ClearAchievement        = "SteamAPI_ISteamUserStats_ClearAchievement"
