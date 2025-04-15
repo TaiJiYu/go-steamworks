@@ -331,6 +331,30 @@ func (s steamUserStats) RequestCurrentStats() bool {
 	return byte(v) != 0
 }
 
+func (s steamUserStats) SetStar(name string, starCount int) bool {
+	cname := append([]byte(name), 0)
+	defer runtime.KeepAlive(cname)
+
+	v, err := theDLL.call(flatAPI_ISteamUserStats_SetStatInt, uintptr(s), uintptr(unsafe.Pointer(&cname[0])), uintptr(starCount))
+	if err != nil {
+		panic(err)
+	}
+
+	return byte(v) != 0
+}
+func (s steamUserStats) GetStar(name string) (starCount int, success bool) {
+	cname := append([]byte(name), 0)
+	defer runtime.KeepAlive(cname)
+
+	v, err := theDLL.call(flatAPI_ISteamUserStats_GetStatInt, uintptr(s), uintptr(unsafe.Pointer(&cname[0])), uintptr(unsafe.Pointer(&starCount)))
+	if err != nil {
+		panic(err)
+	}
+
+	success = byte(v) != 0
+	return
+}
+
 func (s steamUserStats) GetAchievement(name string) (achieved, success bool) {
 	cname := append([]byte(name), 0)
 	defer runtime.KeepAlive(cname)
