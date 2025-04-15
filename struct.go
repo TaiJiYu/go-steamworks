@@ -9,6 +9,7 @@ import (
 typedef unsigned long long int SteamLeaderboard_t;
 typedef unsigned long long int SteamLeaderboardEntries_t;
 typedef unsigned char uint8;
+typedef unsigned int EResult;
 
 typedef struct {
 	unsigned long int m_steamIDUser;
@@ -37,6 +38,12 @@ typedef struct{
 	int m_nGlobalRankNew;
 	int m_nGlobalRankPrevious;
 }LeaderboardScoreUploaded_t;
+
+typedef struct {
+	unsigned long long int m_nGameID;
+	EResult m_eResult;
+	unsigned long long int m_steamIDUser;
+}UserStatsReceived_t;
 */
 import "C"
 
@@ -124,6 +131,32 @@ func (l LeaderboardFindResult_t) CStruct() C.LeaderboardFindResult_t {
 }
 
 func (l LeaderboardFindResult_t) Size() uintptr {
+	return reflect.TypeOf(l.CStruct()).Size()
+}
+
+type EResult int
+type UserStatsReceived_t struct {
+	GameID  int
+	Result  EResult
+	SteamID CSteamID
+}
+
+func (l UserStatsReceived_t) FromByte(b []byte) UserStatsReceived_t {
+	return l.FromCStruct(**(**C.UserStatsReceived_t)(unsafe.Pointer(&b)))
+}
+
+func (l UserStatsReceived_t) FromCStruct(cstruct C.UserStatsReceived_t) UserStatsReceived_t {
+	return UserStatsReceived_t{
+		SteamLeaderboard: SteamLeaderboard_t(cstruct.m_hSteamLeaderboard),
+		LeaderboardFound: cstruct.m_bLeaderboardFound != 0,
+	}
+}
+
+func (l UserStatsReceived_t) CStruct() C.UserStatsReceived_t {
+	return C.UserStatsReceived_t{}
+}
+
+func (l UserStatsReceived_t) Size() uintptr {
 	return reflect.TypeOf(l.CStruct()).Size()
 }
 

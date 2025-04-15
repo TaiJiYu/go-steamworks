@@ -124,8 +124,7 @@ type ISteamUser interface {
 
 type ISteamUserStats interface {
 	RequestCurrentStats() bool
-	SetStar(name string, starCount int) bool
-	GetStar(name string) (starCount int, success bool)
+	AddStat(name string)
 	GetAchievement(name string) (achieved, success bool)
 	SetAchievement(name string) bool
 	ClearAchievement(name string) bool
@@ -181,7 +180,7 @@ const (
 	flatAPI_ISteamUser_GetSteamID = "SteamAPI_ISteamUser_GetSteamID"
 
 	flatAPI_SteamUserStats                          = "SteamAPI_SteamUserStats_v013"
-	flatAPI_ISteamUserStats_GetStatInt              = "SteamAPI_ISteamUserStats_GetStatInt32"
+	flatAPI_ISteamUserStats_GetStatInt              = "SteamAPI_ISteamUserStats_GetUserStatInt32"
 	flatAPI_ISteamUserStats_SetStatInt              = "SteamAPI_ISteamUserStats_SetStatInt32"
 	flatAPI_ISteamUserStats_RequestCurrentStats     = "SteamAPI_ISteamUserStats_RequestUserStats"
 	flatAPI_ISteamUserStats_GetAchievement          = "SteamAPI_ISteamUserStats_GetAchievement"

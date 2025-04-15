@@ -322,16 +322,33 @@ func SteamUserStats() ISteamUserStats {
 
 type steamUserStats uintptr
 
-func (s steamUserStats) RequestCurrentStats() bool {
-	v, err := theDLL.call(flatAPI_ISteamUserStats_RequestCurrentStats, uintptr(s))
+func (s steamUserStats) RequestCurrentStats() SteamAPICall_t {
+	v, err := theDLL.call(flatAPI_ISteamUserStats_RequestCurrentStats, uintptr(s), uintptr(SteamUser().GetSteamID()))
 	if err != nil {
 		panic(err)
 	}
 
-	return byte(v) != 0
+	return SteamAPICall_t(v)
 }
 
-func (s steamUserStats) SetStar(name string, starCount int) bool {
+func (s steamUserStats) AddStat(name string) {
+	callbackAPI := s.RequestCurrentStats()
+	defaultCallbackCli().setCallback(&CallbackArgs{
+		CallbackAPI:      callbackAPI,
+		CallbackExpected: iCallbackExpected_UserStatsReceived_t,
+		CallbaseSize:     int(UserStatsReceived_t{}.Size()),
+		SuccessFunc: func(ret []byte) {
+			data := UserStatsReceived_t{}.FromByte(ret)
+			v, ok := s.getUserStat(data.SteamID, name)
+			fmt.Printf("getUserStar:%v ok:%v\n", v, ok)
+			okS := s.setUserStat(name, v+1)
+			fmt.Printf("setUserStar:%v", okS)
+		},
+		TimeoutFunc: func(callbackTime time.Time, callbackSpend time.Duration) {},
+	})
+}
+
+func (s steamUserStats) setUserStat(name string, starCount int) bool {
 	cname := append([]byte(name), 0)
 	defer runtime.KeepAlive(cname)
 
@@ -342,11 +359,11 @@ func (s steamUserStats) SetStar(name string, starCount int) bool {
 
 	return byte(v) != 0
 }
-func (s steamUserStats) GetStar(name string) (starCount int, success bool) {
+func (s steamUserStats) getUserStat(userID CSteamID, name string) (starCount int, success bool) {
 	cname := append([]byte(name), 0)
 	defer runtime.KeepAlive(cname)
 
-	v, err := theDLL.call(flatAPI_ISteamUserStats_GetStatInt, uintptr(s), uintptr(unsafe.Pointer(&cname[0])), uintptr(unsafe.Pointer(&starCount)))
+	v, err := theDLL.call(flatAPI_ISteamUserStats_GetStatInt, uintptr(s), uintptr(userID), uintptr(unsafe.Pointer(&cname[0])), uintptr(unsafe.Pointer(&starCount)))
 	if err != nil {
 		panic(err)
 	}
