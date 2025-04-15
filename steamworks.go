@@ -123,7 +123,7 @@ type ISteamUser interface {
 }
 
 type ISteamUserStats interface {
-	RequestCurrentStats() bool
+	RequestCurrentStats() SteamAPICall_t
 	AddStat(name string)
 	GetAchievement(name string) (achieved, success bool)
 	SetAchievement(name string) bool
