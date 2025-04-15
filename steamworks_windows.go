@@ -323,7 +323,9 @@ func SteamUserStats() ISteamUserStats {
 type steamUserStats uintptr
 
 func (s steamUserStats) RequestCurrentStats() SteamAPICall_t {
-	v, err := theDLL.call(flatAPI_ISteamUserStats_RequestCurrentStats, uintptr(s), uintptr(SteamUser().GetSteamID()))
+	steamID := SteamUser().GetSteamID()
+	fmt.Printf("RequestCurrentStats:%v", steamID)
+	v, err := theDLL.call(flatAPI_ISteamUserStats_RequestCurrentStats, uintptr(s), uintptr(steamID))
 	if err != nil {
 		panic(err)
 	}
