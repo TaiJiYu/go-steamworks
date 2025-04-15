@@ -124,8 +124,8 @@ type ISteamUser interface {
 
 type ISteamUserStats interface {
 	RequestCurrentStats() bool
-	SetStar(name string, starCount int32) bool
-	GetStar(name string) (starCount int32, success bool)
+	SetStar(name string, starCount int) bool
+	GetStar(name string) (starCount int, success bool)
 	GetAchievement(name string) (achieved, success bool)
 	SetAchievement(name string) bool
 	ClearAchievement(name string) bool
