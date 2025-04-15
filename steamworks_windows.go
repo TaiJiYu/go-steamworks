@@ -339,6 +339,7 @@ func (s steamUserStats) AddStat(name string) {
 		CallbaseSize:     int(UserStatsReceived_t{}.Size()),
 		SuccessFunc: func(ret []byte) {
 			data := UserStatsReceived_t{}.FromByte(ret)
+			fmt.Printf("data:%+v", data)
 			v, ok := s.getUserStat(data.SteamID, name)
 			fmt.Printf("getUserStar:%v ok:%v\n", v, ok)
 			okS := s.setUserStat(name, v+1)
