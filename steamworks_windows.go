@@ -324,13 +324,51 @@ type steamUserStats uintptr
 
 func (s steamUserStats) RequestCurrentStats() SteamAPICall_t {
 	steamID := SteamUser().GetSteamID()
-	fmt.Printf("RequestCurrentStats:%v", steamID)
 	v, err := theDLL.call(flatAPI_ISteamUserStats_RequestCurrentStats, uintptr(s), uintptr(steamID))
 	if err != nil {
 		panic(err)
 	}
 
 	return SteamAPICall_t(v)
+}
+
+func (s steamUserStats) requestGlobalStats(historDays int) SteamAPICall_t {
+	v, err := theDLL.call(flatAPI_ISteamUserStats_RequestGlobalStats, uintptr(s), uintptr(historDays))
+	if err != nil {
+		panic(err)
+	}
+
+	return SteamAPICall_t(v)
+}
+func (s steamUserStats) getglobalStats(name string) (statCount int, success bool) {
+	cname := append([]byte(name), 0)
+	defer runtime.KeepAlive(cname)
+
+	v, err := theDLL.call(flatAPI_ISteamUserStats_GetGlobalStatInt, uintptr(s), uintptr(unsafe.Pointer(&cname[0])), uintptr(unsafe.Pointer(&statCount)))
+	if err != nil {
+		panic(err)
+	}
+
+	success = byte(v) != 0
+	return
+
+}
+
+type GlobalStatsSuccessFunc func(name string, value int)
+
+// 仅获取总量统计，不获取历史天数的数据
+func (s steamUserStats) GetGlobalStats(name string, successFunc GlobalStatsSuccessFunc) {
+	callbackAPI := s.requestGlobalStats(0)
+	defaultCallbackCli().setCallback(&CallbackArgs{
+		CallbackAPI:      callbackAPI,
+		CallbackExpected: iCallbackExpected_GlobalStatsReceived_t,
+		CallbaseSize:     int(GlobalStatsReceived_t{}.Size()),
+		SuccessFunc: func(ret []byte) {
+			v, _ := s.getglobalStats(name)
+			successFunc(name, v)
+		},
+		TimeoutFunc: func(callbackTime time.Time, callbackSpend time.Duration) {},
+	})
 }
 
 func (s steamUserStats) AddStat(name string) {
@@ -340,12 +378,9 @@ func (s steamUserStats) AddStat(name string) {
 		CallbackExpected: iCallbackExpected_UserStatsReceived_t,
 		CallbaseSize:     int(UserStatsReceived_t{}.Size()),
 		SuccessFunc: func(ret []byte) {
-			data := UserStatsReceived_t{}.FromByte(ret)
-			fmt.Printf("data:%+v", data)
-			v, ok := s.getUserStat(SteamUser().GetSteamID(), name)
-			fmt.Printf("getUserStar:%v ok:%v\n", v, ok)
-			okS := s.setUserStat(name, v+1)
-			fmt.Printf("setUserStar:%v", okS)
+			// _ = UserStatsReceived_t{}.FromByte(ret)
+			v, _ := s.getUserStat(SteamUser().GetSteamID(), name)
+			s.setUserStat(name, v+1)
 		},
 		TimeoutFunc: func(callbackTime time.Time, callbackSpend time.Duration) {},
 	})

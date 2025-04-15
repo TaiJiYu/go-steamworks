@@ -124,6 +124,7 @@ type ISteamUser interface {
 
 type ISteamUserStats interface {
 	RequestCurrentStats() SteamAPICall_t
+	GetGlobalStats(name string, successFunc GlobalStatsSuccessFunc)
 	AddStat(name string)
 	GetAchievement(name string) (achieved, success bool)
 	SetAchievement(name string) bool
@@ -179,9 +180,12 @@ const (
 	flatAPI_SteamUser             = "SteamAPI_SteamUser_v023"
 	flatAPI_ISteamUser_GetSteamID = "SteamAPI_ISteamUser_GetSteamID"
 
-	flatAPI_SteamUserStats                          = "SteamAPI_SteamUserStats_v013"
-	flatAPI_ISteamUserStats_GetStatInt              = "SteamAPI_ISteamUserStats_GetUserStatInt32"
-	flatAPI_ISteamUserStats_SetStatInt              = "SteamAPI_ISteamUserStats_SetStatInt32"
+	flatAPI_SteamUserStats                     = "SteamAPI_SteamUserStats_v013"
+	flatAPI_ISteamUserStats_GetStatInt         = "SteamAPI_ISteamUserStats_GetUserStatInt32"
+	flatAPI_ISteamUserStats_SetStatInt         = "SteamAPI_ISteamUserStats_SetStatInt32"
+	flatAPI_ISteamUserStats_RequestGlobalStats = "SteamAPI_ISteamUserStats_RequestGlobalStats"
+	flatAPI_ISteamUserStats_GetGlobalStatInt   = "SteamAPI_ISteamUserStats_GetGlobalStatInt64"
+
 	flatAPI_ISteamUserStats_RequestCurrentStats     = "SteamAPI_ISteamUserStats_RequestUserStats"
 	flatAPI_ISteamUserStats_GetAchievement          = "SteamAPI_ISteamUserStats_GetAchievement"
 	flatAPI_ISteamUserStats_SetAchievement          = "SteamAPI_ISteamUserStats_SetAchievement"

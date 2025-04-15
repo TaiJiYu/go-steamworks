@@ -15,6 +15,7 @@ const (
 	iCallbackExpected_LeaderboardScoresDownloaded_t iCallbackExpected = 1105
 	iCallbackExpected_LeaderboardScoreUploaded_t    iCallbackExpected = 1106
 	iCallbackExpected_UserStatsReceived_t           iCallbackExpected = 1101
+	iCallbackExpected_GlobalStatsReceived_t         iCallbackExpected = 1112
 )
 
 type callbackClient struct {

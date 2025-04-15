@@ -44,6 +44,12 @@ typedef struct {
 	EResult m_eResult;
 	unsigned long long int m_steamIDUser;
 }UserStatsReceived_t;
+
+
+typedef struct {
+	unsigned long long int m_nGameID;
+	EResult m_eResult;
+}GlobalStatsReceived_t;
 */
 import "C"
 
@@ -158,6 +164,30 @@ func (l UserStatsReceived_t) CStruct() C.UserStatsReceived_t {
 }
 
 func (l UserStatsReceived_t) Size() uintptr {
+	return reflect.TypeOf(l.CStruct()).Size()
+}
+
+type GlobalStatsReceived_t struct {
+	GameID int
+	Result EResult
+}
+
+func (l GlobalStatsReceived_t) FromByte(b []byte) GlobalStatsReceived_t {
+	return l.FromCStruct(**(**C.GlobalStatsReceived_t)(unsafe.Pointer(&b)))
+}
+
+func (l GlobalStatsReceived_t) FromCStruct(cstruct C.GlobalStatsReceived_t) GlobalStatsReceived_t {
+	return GlobalStatsReceived_t{
+		GameID: int(cstruct.m_nGameID),
+		Result: EResult(cstruct.m_eResult),
+	}
+}
+
+func (l GlobalStatsReceived_t) CStruct() C.GlobalStatsReceived_t {
+	return C.GlobalStatsReceived_t{}
+}
+
+func (l GlobalStatsReceived_t) Size() uintptr {
 	return reflect.TypeOf(l.CStruct()).Size()
 }
 
