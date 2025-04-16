@@ -124,7 +124,7 @@ type ISteamUser interface {
 
 type ISteamUserStats interface {
 	RequestCurrentStats() SteamAPICall_t
-	GetGlobalStats(name string, successFunc GlobalStatsSuccessFunc)
+	GetGlobalStats(names []string, successFunc GlobalStatsSuccessFunc)
 	AddStat(name string)
 	GetAchievement(name string) (achieved, success bool)
 	SetAchievement(name string) bool

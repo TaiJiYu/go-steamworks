@@ -354,10 +354,15 @@ func (s steamUserStats) getglobalStats(name string) (statCount int, success bool
 
 }
 
-type GlobalStatsSuccessFunc func(name string, value int)
+type GlobalStatsSuccessFunc func(values []GlobalStat)
+
+type GlobalStat struct {
+	Name  string
+	Value int
+}
 
 // 仅获取总量统计，不获取历史天数的数据
-func (s steamUserStats) GetGlobalStats(name string, successFunc GlobalStatsSuccessFunc) {
+func (s steamUserStats) GetGlobalStats(names []string, successFunc GlobalStatsSuccessFunc) {
 	callbackAPI := s.requestGlobalStats(0)
 	defaultCallbackCli().setCallback(&CallbackArgs{
 		CallbackAPI:      callbackAPI,
@@ -366,8 +371,30 @@ func (s steamUserStats) GetGlobalStats(name string, successFunc GlobalStatsSucce
 		SuccessFunc: func(ret []byte) {
 			d := GlobalStatsReceived_t{}.FromByte(ret)
 			fmt.Printf("data:%+v\n", d)
-			v, _ := s.getglobalStats(name)
-			successFunc(name, v)
+			values := []GlobalStat{}
+			for _, name := range names {
+				v, _ := s.getglobalStats(name)
+				ifget := false
+				for index, vv := range values {
+					if v >= vv.Value {
+						ifget = true
+						begin := append([]GlobalStat{}, values[:index]...)
+						end := append([]GlobalStat{GlobalStat{
+							Name:  name,
+							Value: v,
+						}}, values[index+1:]...)
+						values = append(begin, end...)
+						break
+					}
+				}
+				if !ifget {
+					values = append(values, GlobalStat{
+						Name:  name,
+						Value: v,
+					})
+				}
+			}
+			successFunc(values)
 		},
 		TimeoutFunc: func(callbackTime time.Time, callbackSpend time.Duration) {},
 	})
