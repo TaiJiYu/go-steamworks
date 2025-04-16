@@ -364,6 +364,8 @@ func (s steamUserStats) GetGlobalStats(name string, successFunc GlobalStatsSucce
 		CallbackExpected: iCallbackExpected_GlobalStatsReceived_t,
 		CallbaseSize:     int(GlobalStatsReceived_t{}.Size()),
 		SuccessFunc: func(ret []byte) {
+			d := GlobalStatsReceived_t{}.FromByte(ret)
+			fmt.Printf("data:%+v\n", d)
 			v, _ := s.getglobalStats(name)
 			successFunc(name, v)
 		},
