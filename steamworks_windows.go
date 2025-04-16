@@ -379,10 +379,10 @@ func (s steamUserStats) GetGlobalStats(names []string, successFunc GlobalStatsSu
 					if v >= vv.Value {
 						ifget = true
 						begin := append([]GlobalStat{}, values[:index]...)
-						end := append([]GlobalStat{GlobalStat{
+						end := append([]GlobalStat{{
 							Name:  name,
 							Value: v,
-						}}, values[index+1:]...)
+						}}, values[index:]...)
 						values = append(begin, end...)
 						break
 					}
